@@ -1,3 +1,3 @@
 # My MovieApp
 
-![CHEESE!](public\img\movie.jpg)
+![CHEESE!](/public/img/movie.jpg)
