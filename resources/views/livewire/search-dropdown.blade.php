@@ -1,8 +1,9 @@
-<div>
+<div x-data="{ isOpen: true }" @click.away="isOpen = false">
     <div class="flex items-center text-sm justify-between relative mt-2 md:mt-0">
         <input wire:model.debounce.500ms="search" type="text"
             class="bg-gray-800 rounded-full w-64 ml-2 px-4 py-1 pl-6 focus:outline-none focus:shadow-outline"
-            placeholder="Search" />
+            placeholder="Search" @focus="isOpen = true" @keydown.shift.tab="isOpen = false"
+            @keydown.escape.window="isOpen = false" @keydown="isOpen = true" />
         <button class="absolute left-0 mr-1 ml-3">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 opacity-70 text-gray-300 duration-200 hover:scale-110"
                 viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round"
@@ -17,13 +18,15 @@
     </div>
     @if (strlen($search) >= 2)
 
-        <div class="absolute bg-gray-800 rounded w-64 mt-4">
+        <div class="z-50 absolute bg-gray-800 rounded w-64 mt-4" x-show="isOpen">
             @if ($searchResults->count() > 0)
                 <ul>
                     @foreach ($searchResults as $result)
                         <li class="border-b border-gray-700">
                             <a href="movie/{{ $result['id'] }}"
-                                class="block hover:bg-gray-700 px-3 py-3 flex items-center">
+                                class="block hover:bg-gray-700 px-3 py-3 flex items-center transition ease-in-out
+                                duration-150"
+                                @if ($loop->last) @keydown.tab="isOpen = false" @endif>
                                 @if ($result['poster_path'])
                                     <img class="w-8"
                                         src="https://image.tmdb.org/t/p/w92/{{ $result['poster_path'] }}"
